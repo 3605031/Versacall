@@ -1,0 +1,24 @@
+.App {
+  text-align: center;
+}
+
+
+.flex_container {
+
+  display: flex;
+  
+
+}
+
+
+
+.filter {
+
+  flex: 1
+
+}
+
+.graph {
+  flex: 3
+}
+
