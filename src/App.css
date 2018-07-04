@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  
 }
 
 
@@ -14,11 +15,17 @@
 
 .filter {
 
-  flex: 1
+  flex: 1;
+  border: 1px black solid
+  
 
 }
 
 .graph {
-  flex: 3
+  flex: 3;
+  border: 1px black solid
 }
 
+.clear_filter {
+  text-align: center
+}

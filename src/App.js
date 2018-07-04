@@ -1,55 +1,105 @@
 import React, { Component } from 'react';
-import Filter from "./components/Filter/Filter.js"
-import axios from 'axios';
+import Filter from "./components/Filter/Filter.js";
+import helpers from "./helpers/functions.js";
+import Icon from '@material-ui/core/Icon';
+import Button from '@material-ui/core/Button';
 import './App.css';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-
+      gender_filter : "",
+      year_filter   : "",
+      ethnicity_filter : "",
+      most_popular : [],
     }
   }
 
   componentDidMount() {
-    axios.get("https://data.cityofnewyork.us/api/views/25th-nujf/rows.json")
-      .then(res => {
-        console.log(res.data.data[0])
-
-        console.log(res.data.data.length)
-
-        var data_array = res.data.data
-        var year = 8
-        var gender = 9
-        var ethnicity = 10
-        var name = 11
-
-        var year_array = []
-        var ethnicity_array = []
-        var gender_array = []
 
 
-        data_array.forEach(function(element){
+    
+  }
 
-          if(!year_array.includes(element[year])){
-            year_array.push(element[year])
-          }
+  //Redo
+  setFilter = (data_array,gender,year,ethnicity) => {
 
-          if(!ethnicity_array.includes(element[ethnicity])){
-            ethnicity_array.push(element[ethnicity])
-          }
 
-          if(!gender_array.includes(element[gender])){
-            gender_array.push(element[gender])
-          }
+      if(gender!==null){
 
-        })
+        this.setState({
+          gender_filter : gender 
+        },this.filterData.bind(this,data_array))
+      }
+      if(year!==null){
 
-        console.log(year_array)
-        console.log(ethnicity_array)
-        console.log(gender_array)
+        this.setState({
+          year_filter : year 
+        }, this.filterData.bind(this,data_array))
+      }
+      if(ethnicity!==null){
+
+        this.setState({
+          ethnicity_filter : ethnicity
+        }, this.filterData.bind(this,data_array))
+      }
+  }
+
+  log = () => {
+    console.log(this.state)
+  }
+
+  filterData = (data_array) => {
+
+    console.log(this.state)
+    
+    var year_slot = 8
+    var gender_slot = 9
+    var ethnicity_slot = 10
+    var name = 11
+
+    var name_map = new Map()
+    var name_array = []
+    var popular_names = []
+    var top_names = 10
+
+    //Map each name's popularity
+    data_array.forEach((element,index) => {
+
+      var arg1 = (element[year_slot] === this.state.year_filter) || this.state.year_filter == ""
+      var arg2 = (element[gender_slot] === this.state.gender_filter) || this.state.gender_filter == ""
+      var arg3 = (element[ethnicity_slot] === this.state.ethnicity_filter) || this.state.ethnicity_filter == ""
+
+
+      if(!name_map.has(element[name].toLowerCase()) && arg1 && arg2  && arg3){
         
-      })
+        name_map.set(element[name].toLowerCase(),1)
+      }
+
+      else if(name_map.has(element[name].toLowerCase()) && arg1 && arg2  && arg3){
+        
+        var counter = name_map.get(element[name].toLowerCase())
+        counter = counter + 1
+        name_map.set(element[name].toLowerCase(),counter)
+      }
+    })
+
+    //Add to array to be sorted
+    name_map.forEach(function(value,key,map){
+      name_array.push([key,value])
+    })
+
+    //Sort array descending
+    name_array.sort(helpers.sortFunction)
+    //Get first 10
+    popular_names = name_array.slice(0,top_names)
+    this.setState({
+      most_popular : popular_names
+    }, function(){
+      console.log(this.state.most_popular)
+    })
+    
   }
 
 
@@ -59,10 +109,24 @@ class App extends Component {
       <div className="App">
         <div className="flex_container">
           <div className="filter">
-            <Filter />
+            <Filter filterData={this.filterData} setFilter={this.setFilter}  state={this.state} />
           </div>
 
           <div className="graph">
+            
+          </div>
+
+        </div>
+
+        <div className="flex_container">
+          <div className="clear_filter">
+                    <Button color="secondary" onClick={this.clearAllFilter}>
+                        CLEAR ALL
+                    <Icon>clear</Icon>
+                    </Button>
+          </div>
+
+          <div className="filter_tags">
             
           </div>
 
