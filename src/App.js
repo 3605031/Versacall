@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Filter from "./components/Filter/Filter.js";
+import Chart from "./components/Chart/Chart.js"
 import helpers from "./helpers/functions.js";
-import Icon from '@material-ui/core/Icon';
+import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import './App.css';
 
@@ -67,9 +68,9 @@ class App extends Component {
     //Map each name's popularity
     data_array.forEach((element,index) => {
 
-      var arg1 = (element[year_slot] === this.state.year_filter) || this.state.year_filter == ""
-      var arg2 = (element[gender_slot] === this.state.gender_filter) || this.state.gender_filter == ""
-      var arg3 = (element[ethnicity_slot] === this.state.ethnicity_filter) || this.state.ethnicity_filter == ""
+      var arg1 = (element[year_slot] === this.state.year_filter) || this.state.year_filter === ""
+      var arg2 = (element[gender_slot] === this.state.gender_filter) || this.state.gender_filter === ""
+      var arg3 = (element[ethnicity_slot] === this.state.ethnicity_filter) || this.state.ethnicity_filter === ""
 
 
       if(!name_map.has(element[name].toLowerCase()) && arg1 && arg2  && arg3){
@@ -112,22 +113,19 @@ class App extends Component {
             <Filter filterData={this.filterData} setFilter={this.setFilter}  state={this.state} />
           </div>
 
-          <div className="graph">
-            
-          </div>
+          <Paper className="graph">
+            <Chart state={this.state} />
+          </Paper>
 
         </div>
 
         <div className="flex_container">
           <div className="clear_filter">
-                    <Button color="secondary" onClick={this.clearAllFilter}>
-                        CLEAR ALL
-                    <Icon>clear</Icon>
-                    </Button>
+                   
           </div>
 
           <div className="filter_tags">
-            
+              
           </div>
 
         </div>

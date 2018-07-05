@@ -1,3 +1,18 @@
 .year_filter {
     text-align: center
 }
+
+.gender_filter {
+    min-width: 150px !important;
+    margin : 5px 0 5px 0 !important;
+}
+
+.year_filter {
+    min-width: 150px !important;
+    margin : 5px 0 5px 0 !important;
+}
+
+.ethnicity_filter {
+    min-width: 150px !important;
+    margin : 5px 0 5px 0 !important;
+}

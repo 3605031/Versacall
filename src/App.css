@@ -1,13 +1,12 @@
 .App {
   text-align: center;
-  
 }
+
 
 
 .flex_container {
 
   display: flex;
-  
 
 }
 
@@ -16,14 +15,13 @@
 .filter {
 
   flex: 1;
-  border: 1px black solid
-  
-
+  margin: 10px 10px 10px 10px;
+  border: 1px black solid;
 }
 
 .graph {
   flex: 3;
-  border: 1px black solid
+  margin: 10px 10px 10px 10px;
 }
 
 .clear_filter {
