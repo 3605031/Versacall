@@ -7,6 +7,7 @@ import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import './App.css';
+import API from "./api/API.js";
 
 class App extends Component {
   constructor(props) {
@@ -17,56 +18,66 @@ class App extends Component {
         year   : "",
         ethnicity : "",
       },
+      data : [],
       most_popular : [],
+      loaded : false,
       
     }
   }
 
   componentDidMount() {
+    API.getData()
+            .then(res => {
+                
+                //Initialize local data array
+                var data_array = res.data.data
 
+                //Initialize array slots for year/ethnicity data
+                var year = 8
+                var ethnicity = 10
+
+                //Dynamically generate all possible years/ethnicity
+                var year_array = []
+                var ethnicity_array = []
+                
+
+                //Get all different types of ethnicity/years from data
+                data_array.forEach(function (element) {
+
+                    if (!year_array.includes(element[year])) {
+                        year_array.push(element[year])
+                    }
+
+                    if (!ethnicity_array.includes(element[ethnicity])) {
+                        ethnicity_array.push(element[ethnicity])
+                    }
+                })
+
+                this.setState({
+                    data: data_array,
+                    year: year_array,
+                    ethnicity: ethnicity_array,
+                    loaded: true,
+                }, () => this.filterData(data_array))
+         
+            })
 
     
   }
 
   //
-  setFilter = (data_array,gender,year,ethnicity) => {
+  setFilter = (type,value) => {
 
+      console.log(type,value)
+      var filters_applied = this.state.filters_applied;
 
-      if(gender!==null){
+      filters_applied[type] = value;
 
-        var filters_applied = {
-          gender : gender,
-          year   : this.state.filters_applied.year,
-          ethnicity : this.state.filters_applied.ethnicity,
-        }
-
-        this.setState({
-          filters_applied : filters_applied
-        },this.filterData.bind(this,data_array))
-      }
-      if(year!==null){
-        var filters_applied = {
-          gender : this.state.filters_applied.gender,
-          year   : year,
-          ethnicity : this.state.filters_applied.ethnicity,
-        }
-
-        this.setState({
-          filters_applied : filters_applied
-        }, this.filterData.bind(this,data_array))
-      }
-
-      if(ethnicity!==null){
-        var filters_applied = {
-          gender : this.state.filters_applied.gender,
-          year   : this.state.filters_applied.year,
-          ethnicity : ethnicity,
-        }
-
-        this.setState({
-          filters_applied : filters_applied
-        }, this.filterData.bind(this,data_array))
-      }
+      this.setState({
+        filters_applied : filters_applied
+      },this.filterData.bind(this,this.state.data))
+      
+      
   }
 
   clearAll = (data_array) => {
@@ -78,15 +89,13 @@ class App extends Component {
 
       this.setState({
         filters_applied : filters_applied
-      }, this.filterData.bind(this,data_array))
+      }, this.filterData.bind(this,this.state.data))
   }
   
 
-  log = () => {
-    console.log(this.state)
-  }
 
   filterData = (data_array) => {
+
     
     var year_slot = 8
     var gender_slot = 9
@@ -106,15 +115,12 @@ class App extends Component {
       var arg2 = (element[gender_slot]  === this.state.filters_applied.gender) || this.state.filters_applied.gender === ""
       var arg3 = (element[ethnicity_slot] === this.state.filters_applied.ethnicity) || this.state.filters_applied.ethnicity === ""
 
-
-      if(!name_map.has(element[name].toLowerCase()) && arg1 && arg2  && arg3){
+      if(arg1 && arg2  && arg3){
+        var counter = name_map.get(element[name].toLowerCase());
         
-        name_map.set(element[name].toLowerCase(),1)
-      }
-
-      else if(name_map.has(element[name].toLowerCase()) && arg1 && arg2  && arg3){
-        
-        var counter = name_map.get(element[name].toLowerCase())
+        if (counter === undefined) {
+          counter = 0;
+        }
         counter = counter + 1
         name_map.set(element[name].toLowerCase(),counter)
       }
@@ -146,13 +152,13 @@ class App extends Component {
 
 
             <Paper  className="tags">
-              <Tags state={this.state}/>
+              <Tags setFilter={this.setFilter} state={this.state}/>
             </Paper>
 
           </div>
 
           <Paper className="graph">
-            <Chart state={this.state} />
+            <Chart state={this.state} responsive/>
           </Paper>
 
            

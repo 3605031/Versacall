@@ -1,6 +1,5 @@
 import React , {Component} from 'react';
 import {Bar} from 'react-chartjs-2';
-import { Button } from '@material-ui/core';
 
 export default class Chart extends Component {
     constructor(props) {

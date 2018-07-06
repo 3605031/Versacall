@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-import Paper from '@material-ui/core/Paper';
 import Chip from '@material-ui/core/Chip';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 import './tags.css'
 
 
@@ -19,19 +17,17 @@ export default class Tags extends Component {
     
     componentDidUpdate(){
 
-        var filter_object = this.props.state.filters_applied
-        console.log(filter_object)
+      
 
 
     }
     
-    handleDelete = (event) => {
-        console.log(event.target.parentNode.parentNode.firstChild.innerHTML)
+    handleDelete = (event, element) => {
+       
+        this.props.setFilter([`${element}`],'');
     }
 
     showTags = () => {
-
-        console.log("showtags")
 
         var filter_object = this.props.state.filters_applied
         var tags_array = []
@@ -43,13 +39,10 @@ export default class Tags extends Component {
         }
         
         return(
-        tags_array.map( element => { return <Chip className="tags" label={`${element[0]} : ${element[1]}`}/>}))
+        tags_array.map( element => { return <Chip  className="tags" onDelete={(event) => this.handleDelete(event, element[0])} label={`${element[0]} : ${element[1]}`}/>}))
     }
     
     render() {
-        
-        const { anchor } = this.state;
-        
         
         return (
             <div>

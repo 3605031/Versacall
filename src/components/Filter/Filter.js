@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Icon from '@material-ui/core/Icon';
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
-import API from "../../api/API.js";
+
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Paper from '@material-ui/core/Paper';
@@ -14,86 +14,24 @@ export default class Filter extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            anchor: 'left',
-            anchorEl: null,
             loaded: false,
-            data: [],
-            year: [],
-            ethnicity: [],
         }
     }
 
 
     componentDidMount() {
-        API.getData()
-            .then(res => {
-                
-                //Initialize local data array
-                var data_array = res.data.data
-
-                //Initialize array slots for year/ethnicity data
-                var year = 8
-                var ethnicity = 10
-
-                //Dynamically generate all possible years/ethnicity
-                var year_array = []
-                var ethnicity_array = []
-                var gender_array = []
-
-                //Get all different types of ethnicity/years from data
-                data_array.forEach(function (element) {
-
-                    if (!year_array.includes(element[year])) {
-                        year_array.push(element[year])
-                    }
-
-                    if (!ethnicity_array.includes(element[ethnicity])) {
-                        ethnicity_array.push(element[ethnicity])
-                    }
-                })
-
-                this.setState({
-                    data: data_array,
-                    year: year_array,
-                    ethnicity: ethnicity_array,
-                    loaded: true,
-                })
-
-                //Initial top 10 without filters
-                this.props.filterData(this.state.data, null, null, null)
-               
-            })
+        
     }
 
-    //Year Filter
-    handleChange_year = event => {
-        this.props.setFilter(this.state.data,null,event.target.value,null)
-
+    
+    handleChange = (event,type) => {
+        this.props.setFilter(type,event.target.value)
     };
-
-    //Gender Filter
-    handleChange_gender = event => {
-
-        console.log(event.target.value)
-        this.props.setFilter(this.state.data,event.target.value,null,null)
-
-    };
-    //Ethnicity Filter
-    handleChange_ethnicity = event => {
-        this.props.setFilter(this.state.data,null,null,event.target.value)
-
-    };
-
-    clearAllFilter = () => {
-        this.props.clearAll(this.state.data)
-    };
-
 
 
 
     render() {
 
-        const { anchor } = this.state;
 
 
         return (
@@ -105,7 +43,7 @@ export default class Filter extends Component {
                             <InputLabel  >Gender</InputLabel>
                             <Select
                                 value={this.props.state.filters_applied.gender}
-                                onChange={this.handleChange_gender}
+                                onChange={ (event) => this.handleChange(event,"gender")}
                                 
                             >
                                 <MenuItem value={"MALE"}>Male</MenuItem>)}
@@ -116,18 +54,18 @@ export default class Filter extends Component {
                 
 
 
-                <div>
-                    <FormControl className="year_filter" >
-                        <InputLabel >Year</InputLabel>
-                        <Select
-                            value={this.props.state.filters_applied.year}
-                            onChange={this.handleChange_year}
-                            
-                        >
-                            {this.state.year.map( (element) => <MenuItem key={element} value={element}>{element}</MenuItem>)}
-                        </Select>
-                    </FormControl>
-                </div>
+                
+                <FormControl className="year_filter" >
+                    <InputLabel >Year</InputLabel>
+                    <Select
+                        value={this.props.state.filters_applied.year}
+                        onChange={ (event) => this.handleChange(event,"year")}
+                        
+                    >
+                        {this.props.state.loaded ? this.props.state.year.map( (element) => <MenuItem key={element} value={element}>{element}</MenuItem>):null}
+                    </Select>
+                </FormControl>
+                
 
 
 
@@ -136,15 +74,15 @@ export default class Filter extends Component {
                     <InputLabel >Ethnicity</InputLabel>
                     <Select
                         value={this.props.state.filters_applied.ethnicity}
-                        onChange={this.handleChange_ethnicity}
+                        onChange={ (event) => this.handleChange(event,"ethnicity")}
                         
                     >
-                        {this.state.ethnicity.map( (element) => <MenuItem key={element} value={element}>{element}</MenuItem>)}
+                        {this.props.state.loaded ? this.props.state.ethnicity.map( (element) => <MenuItem key={element} value={element}>{element}</MenuItem>):null}
                     </Select>
                 </FormControl>
             </Paper>
 
-            <Button className="clear_all" variant="contained" color="secondary" fullWidth={true} onClick={this.clearAllFilter}>
+            <Button className="clear_all" variant="contained" color="secondary" fullWidth={true} onClick={this.props.clearAll}>
                     CLEAR ALL
                 <Icon>clear</Icon>
                 </Button>
