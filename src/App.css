@@ -16,14 +16,21 @@
 
   flex: 1;
   margin: 10px 10px 10px 10px;
-  border: 1px black solid;
+  position: relative;
 }
 
 .graph {
-  flex: 3;
+  flex: 5;
   margin: 10px 10px 10px 10px;
+  text-align: center;
 }
 
 .clear_filter {
   text-align: center
+}
+
+.tags {
+  
+  margin-top: 20px;
+
 }

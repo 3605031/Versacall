@@ -10,21 +10,6 @@ import InputLabel from '@material-ui/core/InputLabel';
 import './filter.css';
 
 
-const styles = theme => ({
-    root: {
-      display: 'flex',
-      flexWrap: 'wrap',
-    },
-    formControl: {
-      margin: theme.spacing.unit,
-      minWidth: 120,
-    },
-    selectEmpty: {
-      marginTop: theme.spacing.unit * 2,
-    },
-});
-
-
 export default class Filter extends Component {
     constructor(props) {
         super(props);
@@ -100,7 +85,7 @@ export default class Filter extends Component {
     };
 
     clearAllFilter = () => {
-        this.props.setFilter(this.state.data,"", "", "")
+        this.props.clearAll(this.state.data)
     };
 
 
@@ -112,13 +97,14 @@ export default class Filter extends Component {
 
 
         return (
+            <div>
             <Paper>
 
                 
                 <FormControl className="gender_filter" >
                             <InputLabel  >Gender</InputLabel>
                             <Select
-                                value={this.props.state.gender_filter}
+                                value={this.props.state.filters_applied.gender}
                                 onChange={this.handleChange_gender}
                                 
                             >
@@ -134,7 +120,7 @@ export default class Filter extends Component {
                     <FormControl className="year_filter" >
                         <InputLabel >Year</InputLabel>
                         <Select
-                            value={this.props.state.year_filter}
+                            value={this.props.state.filters_applied.year}
                             onChange={this.handleChange_year}
                             
                         >
@@ -149,23 +135,20 @@ export default class Filter extends Component {
                 <FormControl className="ethnicity_filter">
                     <InputLabel >Ethnicity</InputLabel>
                     <Select
-                        value={this.props.state.ethnicity_filter}
+                        value={this.props.state.filters_applied.ethnicity}
                         onChange={this.handleChange_ethnicity}
                         
                     >
                         {this.state.ethnicity.map( (element) => <MenuItem key={element} value={element}>{element}</MenuItem>)}
                     </Select>
                 </FormControl>
-
-
-                <div>
-                    <Button color="secondary" fullWidth="true" onClick={this.clearAllFilter}>
-                        CLEAR ALL
-                    <Icon>clear</Icon>
-                    </Button>
-                </div>
-
             </Paper>
+
+            <Button className="clear_all" variant="contained" color="secondary" fullWidth={true} onClick={this.clearAllFilter}>
+                    CLEAR ALL
+                <Icon>clear</Icon>
+                </Button>
+            </div>
         )
     }
 }

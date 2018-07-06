@@ -18,7 +18,6 @@ export default class Chart extends Component {
         var name_labels = nextProps.state.most_popular.map( element => element[0]);
         var data        = nextProps.state.most_popular.map( element => element[1])
 
-        console.log(name_labels == this.state)
         if(JSON.stringify(this.props.most_popular) !== JSON.stringify(nextProps.state.most_popular)){
             this.setState({
                 most_popular : nextProps.state.most_popular,
@@ -35,7 +34,7 @@ export default class Chart extends Component {
 
     render(){
         return (
-        <div>
+        <div >
             
             <Bar
                 data = {{ labels: this.state.name_labels,
